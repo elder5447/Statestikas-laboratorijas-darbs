@@ -1,0 +1,54 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+Daug_t = pd.read_csv(r"Daugavpils_T.csv", sep="\t", parse_dates=['date'],index_col='date')
+Liep_t = pd.read_csv(r"Liepaja_T.csv", sep="\t", parse_dates=['date'],index_col='date')
+
+def make_hist(ax, data, bins, outline_color, filling_color, quartile_color):
+
+    t_min = np.min(data)
+    t_max = np.max(data)
+
+    marks = np.linspace(t_min, t_max, bins + 1)
+
+    for i in range(len(marks) - 1):
+
+        filtred_data = data[
+            (marks[i] <= data) & (data < marks[i+1])
+        ]
+
+        count = len(filtred_data)
+
+        ax.plot([marks[i], marks[i]], [0, count], color=outline_color)
+        ax.plot([marks[i], marks[i+1]], [count, count], color=outline_color)
+        ax.plot([marks[i+1], marks[i+1]], [0, count], color=outline_color)
+
+        ax.fill_between(
+            [marks[i], marks[i+1]],
+            [count, count],
+            color=filling_color
+        )
+
+    p25 = np.percentile(data, 25)
+    p50 = np.percentile(data, 50)
+    p75 = np.percentile(data, 75)
+
+    ax.axvline(p25, linestyle='--', color=quartile_color, label="25%")
+    ax.axvline(p50, linestyle='--', color=quartile_color, label="50% (mediāna)")
+    ax.axvline(p75, linestyle='--', color=quartile_color, label="75%")
+
+
+fig, axs = plt.subplots(1, 2, figsize=(7, 4), sharey=True, tight_layout=True)
+
+make_hist(axs[0], temperature["Daugavpils"], 30, "black", "gray", "teal")
+make_hist(axs[1], temperature["Liepāja"], 30, "black", "gray", "teal")
+
+axs[0].set_title("Daugavpils")
+axs[1].set_title("Liepāja")
+
+axs[0].set_ylabel("Dienu skaits")
+axs[0].set_xlabel("Temperatūra [°C]")
+axs[1].set_xlabel("Temperatūra [°C]")
+
+plt.savefig("4.png", dpi=300)
+plt.show()
