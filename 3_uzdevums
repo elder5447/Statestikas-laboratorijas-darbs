@@ -1,0 +1,31 @@
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.ticker import PercentFormatter
+
+Daug_t = pd.read_csv(r"Daugavpils_T.csv", sep="\t", parse_dates=['date'],index_col='date')
+Liep_t = pd.read_csv(r"Liepaja_T.csv", sep="\t", parse_dates=['date'],index_col='date')
+
+t_daug = Daug_t["temperature"]
+
+bins = 100
+
+plt.hist(t_daug, bins=bins, density=True, histtype="step", cumulative=True, color="red")
+
+plt.xlabel("Temperatūra [°C]")         
+plt.ylabel("CDF")             
+
+plt.gca().yaxis.set_major_formatter(PercentFormatter(xmax=1))
+
+p25 = np.percentile(t_daug, 25)
+p50 = np.percentile(t_daug, 50)
+p75 = np.percentile(t_daug, 75)
+
+plt.axvline(p25, linestyle='--', label='25%', color="orange")
+plt.axvline(p50, linestyle='--', label='50% (mediāna)', color="orange")
+plt.axvline(p75, linestyle='--', label='75%', color="orange")
+
+
+plt.legend(loc="best")
+
+plt.savefig("3.png", dpi=300)
+plt.show()
