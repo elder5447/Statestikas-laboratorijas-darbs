@@ -1,8 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 Daug_t = pd.read_csv(r"Daugavpils_T.csv", sep="\t", parse_dates=['date'],index_col='date')
 Liep_t = pd.read_csv(r"Liepaja_T.csv", sep="\t", parse_dates=['date'],index_col='date')
+temperature = pd.concat([Daug_t, Liep_t], axis=1)
+temperature.columns=['Daugavpils', 'Liepāja']
 
 def make_hist(ax, data, bins, outline_color, filling_color, quartile_color):
 
