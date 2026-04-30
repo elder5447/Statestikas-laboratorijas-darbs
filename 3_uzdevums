@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import PercentFormatter
+import pandas as pd
 
 Daug_t = pd.read_csv(r"Daugavpils_T.csv", sep="\t", parse_dates=['date'],index_col='date')
 Liep_t = pd.read_csv(r"Liepaja_T.csv", sep="\t", parse_dates=['date'],index_col='date')
