@@ -1,0 +1,30 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+import ipywidgets as widgets
+
+t = np.linspace(-5,5,1000)
+
+islider=widgets.IntSlider( value=1, min=1, max=150, step=1,
+    description='$10^n$', disabled=False,
+    continuous_update=False, orientation='horizontal', readout=True, readout_format='d')
+
+
+def draw_hist(v):
+
+    f_t = (1/(math.gamma((v+1)/2)))/(np.sqrt(np.pi*v)*math.gamma(v/2))*((1+np.square(t)/v)**(-(v+1)/2))
+
+    dt = t[1] - t[0]
+    F_t = np.cumsum(f_t) * dt
+
+    plt.plot(t, F_t)
+    plt.xlabel("t")
+    plt.ylabel("CDF")
+    plt.grid()
+
+    plt.savefig(f"9_2_brivibas_pakape_{v}_.png", dpi=300)
+
+    plt.show()
+
+out = widgets.interactive_output(draw_hist, {'v': islider})
+widgets.VBox([islider, out])
